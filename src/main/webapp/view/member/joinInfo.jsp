@@ -50,13 +50,13 @@
 					<tr>
 						<td colspan="2">
 							<a class="btn btn-primary"
-							href="../ch08_kicmember/memberUpdateForm.jsp">
+							href="../member/memberUpdateForm">
 							회원정보수정</a>
 							<a class="btn btn-primary"
-							href="../ch08_kicmember/memberDeleteForm.jsp">
+							href="../member/memberDeleteForm">
 							회원탈퇴</a>
 							<a class="btn btn-primary"
-							href="../ch08_kicmember/memberPassForm.jsp">
+							href="../member/memberPassForm">
 							비밀번호수정</a>
 						</td>
 					</tr>
