@@ -41,7 +41,7 @@ body {
 		<div class="input-form-backgroud row">
 			<div class="input-form col-md-12 mx-auto">
 				<h4 class="mb-3  center">회원탈퇴</h4>
-				<form class="validation-form" method="post" novalidate action="memberDeletePro.jsp">
+				<form class="validation-form" method="post" novalidate action="memberDeletePro">
 					<div class="row">
 						<div class="col-md-6 mb-3">
 							<label for="id">아이디</label> <input type="text"

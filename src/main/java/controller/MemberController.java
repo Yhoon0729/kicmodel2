@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,6 +25,45 @@ public class MemberController extends MskimRequestMapping{
 	public String join(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		return "/view/member/join.jsp";
 	} // end of join()
+	
+	@RequestMapping("joinPro")
+	public String joinPro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		request.setCharacterEncoding("utf-8");
+		
+		String id = request.getParameter("id");
+		String pass = request.getParameter("pass");
+		String name = request.getParameter("name");
+		int gender = Integer.parseInt(request.getParameter("gender"));
+		String tel = request.getParameter("tel");
+		String email = request.getParameter("email");
+		
+		KicMemberDAO dao = new KicMemberDAO();
+		KicMember kic = new KicMember(); // DTO bean
+		kic.setId(id);
+		kic.setPass(pass);
+		kic.setName(name);
+		kic.setGender(gender);
+		kic.setTel(tel);
+		kic.setEmail(email);
+		
+		int num = dao.insertMember(kic);
+		
+		String msg = "";
+		String url = "join";
+		
+		if(num > 0) {
+			msg = name + "님의 회원가입이 완료되었습니다.";
+			url = "login";
+		} else {
+			msg = "회원가입이 실패 하였습니다.";
+		}
+		
+		request.setAttribute("msg", msg);
+		request.setAttribute("url", url);
+		
+		return "/view/alert.jsp";
+	} // end of joinPro()
 	
 	@RequestMapping("joinInfo")
 	public String joinInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -96,6 +136,39 @@ public class MemberController extends MskimRequestMapping{
 	public String memberDeleteForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		return "/view/member/memberDeleteForm.jsp";
 	} // end of memberDeleteForm()
+	
+	@RequestMapping("memberDeletePro")
+	public String memberDeletePro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		request.setCharacterEncoding("utf-8");
+		
+		String id = (String)session.getAttribute("id");
+		String pass = request.getParameter("pass");
+		
+		KicMemberDAO dao = new KicMemberDAO();
+		KicMember memdb = dao.getMember(id);
+		
+		String msg = "";
+		String url = "memberDeleteForm";
+		
+		if (memdb != null) {
+			if (memdb.getPass().equals(pass)) {
+				msg = "탈퇴 완료";
+				session.invalidate();
+				dao.deleteMember(id); 	
+				url = "index";
+			} else {
+				msg = "비밀번호가 틀렸습니다.";
+			} // end of if (memdb.getPass().equals(pass))
+		} else {
+			msg = "탈퇴할 수 없습니다.";
+		} // end of if (memdb != null)
+		
+		request.setAttribute("msg", msg);
+		request.setAttribute("url", url);
+		
+		return "/view/alert.jsp";
+	} // end of memberDeletePro()
 	
 	@RequestMapping("memberPassForm")
 	public String memberPassForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -183,4 +256,13 @@ public class MemberController extends MskimRequestMapping{
 		request.setAttribute("url", url);
 		return "/view/alert.jsp";
 	} // end of loginPro()
+	
+	@RequestMapping("memberList")
+	public String memberList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		KicMemberDAO dao = new KicMemberDAO();
+		List<KicMember> li = dao.memberList();
+		
+		request.setAttribute("li", li);
+		return "/view/member/memberList.jsp";
+	} // end of join()
 }

@@ -18,23 +18,25 @@
 <body>
 	<nav class="navbar navbar-expand-sm bg-light">
 		<ul class="navbar-nav">
-			<li class="nav-item"><a class="nav-link"
-				href="../member/index">홈페이지</a></li>
-				
+			<li class="nav-item"><a class="nav-link" href="../member/index">홈페이지</a></li>
+
 			<c:if test="${sessionScope.id==null}">
 				<li class="nav-item"><a class="nav-link"
 					href="${pageContext.request.contextPath}/member/join">회원가입</a></li>
-				<li class="nav-item"><a class="nav-link"
-					href="../member/login">로그인</a></li>
+				<li class="nav-item"><a class="nav-link" href="../member/login">로그인</a></li>
 			</c:if>
 
 			<c:if test="${sessionScope.id!=null}">
 				<li class="nav-item"><a class="nav-link"
-					href="../member/joinInfo">
-						회원정보[<%=session.getAttribute("id")%>]
+					href="../member/joinInfo"> 회원정보[<%=session.getAttribute("id")%>]
 				</a></li>
 				<li class="nav-item"><a class="nav-link"
 					href="../member/logout">로그아웃</a></li>
+			</c:if>
+
+			<c:if test="${sessionScope.id eq 'admin'}">
+				<li class="nav-item"><a class="nav-link"
+					href="../member/memberList">회원리스트</a></li>
 			</c:if>
 
 			<li class="nav-item"><a class="nav-link" href="#">공지사항</a></li>
