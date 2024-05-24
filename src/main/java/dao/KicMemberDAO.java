@@ -83,7 +83,7 @@ public class KicMemberDAO {
 			pstmt.setInt(4, kic.getGender());
 			pstmt.setString(5, kic.getTel());
 			pstmt.setString(6, kic.getEmail());
-			pstmt.setString(7, "");
+			pstmt.setString(7, kic.getPicture());
 			// sql 실행
 			int num = pstmt.executeUpdate();
 			return num;
@@ -99,7 +99,7 @@ public class KicMemberDAO {
 		// 3. PreparedStatement
 		PreparedStatement pstmt = null;
 		
-		String sql = "update kicmember set name=?, gender=?, tel=?, email=? where id = ?";
+		String sql = "update kicmember set name=?, gender=?, tel=?, email=?, picture=? where id = ?";
 		
 		// 4. mapping
 		try {
@@ -108,7 +108,8 @@ public class KicMemberDAO {
 			pstmt.setInt(2, kic.getGender());
 			pstmt.setString(3, kic.getTel());
 			pstmt.setString(4, kic.getEmail());
-			pstmt.setString(5, kic.getId());
+			pstmt.setString(5, kic.getPicture());
+			pstmt.setString(6, kic.getId());
 			// sql 실행
 			int num = pstmt.executeUpdate();
 			return num;

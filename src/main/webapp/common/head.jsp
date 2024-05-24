@@ -14,24 +14,38 @@
 	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+.nav {
+	color: #142745;
+	font-weight: 900;
+}
+</style>
 </head>
 <body>
 	<nav class="navbar navbar-expand-sm bg-light">
 		<ul class="navbar-nav">
-			<li class="nav-item"><a class="nav-link" href="../member/index">홈페이지</a></li>
+			<a class="navbar-brand "
+				href="${pageContext.request.contextPath}/member/index"> <img
+				alt="Logo" src="${pageContext.request.contextPath}/image/logo.png"
+				style="width: 50%">
+			</a>
+
+			<li class="nav-item"><a class="nav-link ${nav eq 'index'?'nav': ' '}" href="../member/index">홈페이지</a></li>
 
 			<c:if test="${sessionScope.id==null}">
-				<li class="nav-item"><a class="nav-link"
+				<li class="nav-item"><a class="nav-link ${nav eq 'join'?'nav':' '}"
 					href="${pageContext.request.contextPath}/member/join">회원가입</a></li>
-				<li class="nav-item"><a class="nav-link" href="../member/login">로그인</a></li>
+				<li class="nav-item"><a class="nav-link ${nav eq 'login'?'nav': ' '}" href="../member/login">로그인</a></li>
 			</c:if>
 
 			<c:if test="${sessionScope.id!=null}">
-				<li class="nav-item"><a class="nav-link"
-					href="../member/joinInfo"> 회원정보[<%=session.getAttribute("id")%>]
+				<li class="nav-item"><a class="nav-link ${nav eq 'joininfo'?'nav': ' '}"
+					href="${pageContext.request.contextPath}/member/joinInfo">
+						회원정보[<%=session.getAttribute("id")%>]
 				</a></li>
 				<li class="nav-item"><a class="nav-link"
-					href="../member/logout">로그아웃</a></li>
+					href="${pageContext.request.contextPath}/member/logout">로그아웃</a></li>
 			</c:if>
 
 			<c:if test="${sessionScope.id eq 'admin'}">
@@ -39,7 +53,12 @@
 					href="../member/memberList">회원리스트</a></li>
 			</c:if>
 
-			<li class="nav-item"><a class="nav-link" href="#">공지사항</a></li>
+			<li class="nav-item"><a class="nav-link ${boardid eq '1'?'nav': ' '}"
+				href="${pageContext.request.contextPath}/board/boardList?boardid=1">공지사항</a></li>
+			<li class="nav-item"><a class="nav-link ${boardid eq '2'?'nav': ' '}"
+				href="${pageContext.request.contextPath}/board/boardList?boardid=2">자유게시판</a></li>
+			<li class="nav-item"><a class="nav-link ${boardid eq '3'?'nav': ' '}"
+				href="${pageContext.request.contextPath}/board/boardList?boardid=3">Q&A</a></li>
 		</ul>
 	</nav>
 	<br>

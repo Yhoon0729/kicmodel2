@@ -22,8 +22,9 @@
 </head>
 <body>
 	<div class="container">
+		<h2 class="text-center">${boardName}[${count}]</h2>
 		<a class="btn btn-primary float-right m-2" 
-		href="../board/boardForm">게시판 입력</a>
+		href="../board/boardForm?boardid=${boardid}">게시판 입력</a>
 	
 		<table class="table">
 			<thead>
@@ -38,17 +39,20 @@
 				</tr>
 			</thead>
 			<tbody>
+				<c:set var="count" value="${count}" />
 				<c:forEach var="mem" items="${li}">
 					<tr>
-						<td>${mem.num}</td>
+						<td>${count}</td>
+						<c:set var="count" value="${count-1}" />
 						<td>${mem.name}</td>
-						<td>${mem.subject}</td>
+						<td><a href="../board/boardInfo?num=${mem.num}">${mem.subject}</a></td>
 						<td>${mem.file1}</td>
 						<td>${mem.content}</td>
 						<td><fmt:formatDate value="${mem.regdate}" pattern="yyyy-MM-dd HH:mm"/> </td>
 						<td>${mem.readcnt}</td>
 					</tr>
 				</c:forEach>
+				</tbody>
 		</table>
 	</div>
 </body>

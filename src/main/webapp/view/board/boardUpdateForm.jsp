@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>회원정보수정</title>
+<title>게시글 수정</title>
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -35,47 +35,32 @@ body {
 	box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
 }
 </style>
-
-<script>
-function win_upload() {
-	let op = "width=500, height=150, left=50, top=150";
-	open("${pageContext.request.contextPath}/member/pictureimgForm", "", op);
-}
-</script>
 </head>
 
 <body>
 	<div class="container">
 		<div class="input-form-backgroud row">
 			<div class="input-form col-md-12 mx-auto">
-				<h4 class="mb-3">회원정보수정</h4>
-				<form class="validation-form" novalidate action="memberUpdatePro"
-					method="post">
-					<input type="hidden" name="picture" />
+				<h4 class="mb-3">게시글 수정</h4>
+				<form class="validation-form" enctype="multipart/form-data"
+				 action="boardUpdatePro" method="post">
+				 <input type="hidden" name="num" value="${board.num}" />
+				 <input type="hidden" name="originfile" value="${board.file1}" />
 					<div class="row">
-						<div class="col-md-3 mb-3">
-							<label for="id">사진</label> <img src="" width="100px"
-								height="120px" id="pic" name="pic">
-							<button class="btn btn-primary btn-block" onclick="win_upload()">사진업로드</button>
-						</div>
+
 						<div class="col-md-9 mb-3">
 							<div class="row">
+
 								<div class="col-md-6 mb-3">
-									<label for="id">아이디</label> <input type="text"
-										class="form-control" id="id" name="id"
-										value="${mem.id}" readonly>
-									<div class="invalid-feedback">아이디을 입력해주세요.</div>
-								</div>
-								<div class="col-md-6 mb-3">
-									<label for="name">이름</label> <input type="text"
+									<label for="name">작성자</label> <input type="text"
 										class="form-control" id="name" name="name"
-										value="${mem.name}" required>
+										value="${board.name}" required>
 									<div class="invalid-feedback">이름을 입력해주세요.</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					
+
 					<div class="row">
 						<div class="col-md-6 mb-3">
 							<label for="pass">비밀번호</label> <input type="password"
@@ -84,30 +69,31 @@ function win_upload() {
 							<div class="invalid-feedback">비밀번호을 입력해주세요.</div>
 						</div>
 					</div>
-					
+
+					<div class="col-md-6 mb-3">
+						<label for="id">제목</label> <input type="text" class="form-control"
+							id="subject" name="subject" value="${board.subject}">
+						<div class="invalid-feedback">아이디을 입력해주세요.</div>
+					</div>
+
 					<div class="row">
 						<div class="col-md-6 mb-3">
-							<label for="gender">남자</label> <input type="radio" id="gender"
-								name="gender" value="1" required ${mem.getGender()==1 ? "checked" : ""}>
-						</div>
-						<div class="col-md-6 mb-3">
-							<label for="gender">여자</label> <input type="radio" id="gender"
-								name="gender" value="2" required ${mem.getGender()==2 ? "checked" : ""}>
+							<label for="content">내용</label>
+							<textarea cols="" rows="" class="form-control" id="content"
+								style="overflow-y:scroll" name="content" required>${board.content}</textarea>
 						</div>
 					</div>
 
-					<div class="mb-3">
-						<label for="email">이메일</label> <input type="email"
-							class="form-control" id="email" name="email"
-							value="${mem.email}" required>
-						<div class="invalid-feedback">이메일을 입력해주세요.</div>
-					</div>
-
-					<div class="mb-3">
-						<label for="tel">전화번호</label> <input type="text"
-							class="form-control" id="tel" name="tel"
-							value="${mem.tel}" required>
-						<div class="invalid-feedback">전화번호를 입력해주세요.</div>
+					<div class="row">
+						<div class="col-md-9 mb-3">
+							<div class="row">
+								<div class="col-md-6 mb-3">
+									<label for="file1">파일 업로드:${board.file1}</label> <input type="file"
+										class="form-control" id="file1" name="file1">
+									<div class="invalid-feedback">아이디을 입력해주세요.</div>
+								</div>
+							</div>
+						</div>
 					</div>
 
 					<button class="btn btn-primary btn-lg btn-block" type="submit">수정

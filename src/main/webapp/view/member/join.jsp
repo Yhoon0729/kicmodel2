@@ -37,8 +37,22 @@ body {
 </style>
 </head>
 <script>
-function chkform(form) {
-	alert(form.pass.value)
+function chkform(f) {
+	let chk = f.pass.value==f.pass2.value
+	if(!chk) {
+		alert("비밀번호 확인이 틀렸습니다.")
+		f.pass2.focus()
+		return chk;
+	} else {
+		alert("가입이 완료되었습니다.")
+		return chk;
+	}
+}
+
+function win_upload() {
+	let op = "width=500, height=150, left=50, top=150";
+	open("${pageContext.request.contextPath}/member/pictureimgForm", "", op)
+	alert("ok")
 }
 </script>
 
@@ -48,12 +62,12 @@ function chkform(form) {
 			<div class="input-form col-md-12 mx-auto">
 				<h4 class="mb-3">회원가입</h4>
 				<form class="validation-form" novalidate 
-					action="joinPro" method="post">
+					action="joinPro" onsubmit="return chkform(this)" method="post">
 					<div class="row">
 						<div class="col-md-3 mb-3">
 							<label for="id">사진</label> 
-							<img src="" width="100px" height="120px" name="pic">
-							<button class="btn btn-primary  btn-block">사진업로드</button>
+							<img src="" width="100px" height="120px" id="pic" name="pic">
+							<div class="btn btn-primary btn-block" onclick="win_upload()">사진업로드</div>
 						</div>
 						<div class="col-md-9 mb-3">
 							<div class="row">
@@ -79,7 +93,7 @@ function chkform(form) {
 						</div>
 						<div class="col-md-6 mb-3">
 							<label for="pass2">비밀번호확인</label>
-							<input type="password" class="form-control" id="pass2" placeholder="" value="" required>
+							<input type="password" class="form-control" id="pass2" name="pass2" placeholder="" value="" required>
 							<div class="invalid-feedback">비밀번호확인을 입력해주세요.</div>
 						</div>
 					</div>

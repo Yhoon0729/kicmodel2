@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.oreilly.servlet.MultipartRequest;
+
 import dao.KicMemberDAO;
 import kic.mskim.MskimRequestMapping;
 import kic.mskim.RequestMapping;
@@ -16,19 +18,29 @@ import model.KicMember;
 
 @WebServlet("/member/*")
 public class MemberController extends MskimRequestMapping{
+	HttpSession session;
+	
+	@Override
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
+		System.out.println("service");
+		super.service(request, response);
+	}
+	
 	@RequestMapping("index")
 	public String index(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("nav", "index");
 		return "/view/index.jsp";
 	} // end of index()
 	
 	@RequestMapping("join")
 	public String join(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("nav", "join");
 		return "/view/member/join.jsp";
 	} // end of join()
 	
 	@RequestMapping("joinPro")
 	public String joinPro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
 		request.setCharacterEncoding("utf-8");
 		
 		String id = request.getParameter("id");
@@ -37,6 +49,7 @@ public class MemberController extends MskimRequestMapping{
 		int gender = Integer.parseInt(request.getParameter("gender"));
 		String tel = request.getParameter("tel");
 		String email = request.getParameter("email");
+		String picture = request.getParameter("picture");
 		
 		KicMemberDAO dao = new KicMemberDAO();
 		KicMember kic = new KicMember(); // DTO bean
@@ -46,6 +59,7 @@ public class MemberController extends MskimRequestMapping{
 		kic.setGender(gender);
 		kic.setTel(tel);
 		kic.setEmail(email);
+		kic.setPicture(picture);
 		
 		int num = dao.insertMember(kic);
 		
@@ -67,18 +81,18 @@ public class MemberController extends MskimRequestMapping{
 	
 	@RequestMapping("joinInfo")
 	public String joinInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
 		String id = (String) session.getAttribute("id");
 		KicMemberDAO dao = new KicMemberDAO();
 		KicMember mem = dao.getMember(id);
 		
 		request.setAttribute("mem", mem);
+		request.setAttribute("nav", "joininfo");
 		return "/view/member/joinInfo.jsp";
 	} // end of join()
 	
 	@RequestMapping("memberUpdateForm")
 	public String memberUpdateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
+
 		String id = (String) session.getAttribute("id");
 		KicMemberDAO dao = new KicMemberDAO();
 		KicMember mem = dao.getMember(id);
@@ -89,7 +103,7 @@ public class MemberController extends MskimRequestMapping{
 	
 	@RequestMapping("memberUpdatePro")
 	public String memberUpdatePro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
+
 		request.setCharacterEncoding("utf-8");
 		
 		String id = (String)session.getAttribute("id");
@@ -98,6 +112,7 @@ public class MemberController extends MskimRequestMapping{
 		int gender = Integer.parseInt(request.getParameter("gender"));
 		String tel = request.getParameter("tel");
 		String email = request.getParameter("email");
+		String picture = request.getParameter("picture");
 		
 		KicMemberDAO dao = new KicMemberDAO();
 		KicMember memdb = dao.getMember(id);
@@ -109,6 +124,7 @@ public class MemberController extends MskimRequestMapping{
 		kic.setGender(gender);
 		kic.setTel(tel);
 		kic.setEmail(email);
+		kic.setPass(picture);
 		
 		String msg = "";
 		String url = "memberUpdateForm";
@@ -139,7 +155,7 @@ public class MemberController extends MskimRequestMapping{
 	
 	@RequestMapping("memberDeletePro")
 	public String memberDeletePro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
+
 		request.setCharacterEncoding("utf-8");
 		
 		String id = (String)session.getAttribute("id");
@@ -178,7 +194,6 @@ public class MemberController extends MskimRequestMapping{
 	
 	@RequestMapping("memberPassPro")
 	public String memberPassPro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
 		request.setCharacterEncoding("utf-8");
 		
 		String id = (String)session.getAttribute("id");
@@ -213,12 +228,12 @@ public class MemberController extends MskimRequestMapping{
 	
 	@RequestMapping("login")
 	public String login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("nav", "login");
 		return "/view/member/login.jsp";
 	} // end of login()
 	
 	@RequestMapping("logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
 		session.invalidate();
 		request.setAttribute("msg", "로그아웃 되었습니다.");
 		request.setAttribute("url", "index");
@@ -229,7 +244,7 @@ public class MemberController extends MskimRequestMapping{
 	public String loginPro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		request.setCharacterEncoding("utf-8");
-		HttpSession session = request.getSession();
+
 		String id = request.getParameter("id");
 		String pass = request.getParameter("pass");
 
@@ -264,5 +279,29 @@ public class MemberController extends MskimRequestMapping{
 		
 		request.setAttribute("li", li);
 		return "/view/member/memberList.jsp";
-	} // end of join()
+	} // end of memberList()
+	
+	@RequestMapping("pictureimgForm")
+	public String pictureimgForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return "/single/pictureimgForm.jsp";
+	} // end of pictureimgForm()
+	
+	@RequestMapping("picturePro")
+	public String picturePro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String path = request.getServletContext().getRealPath("/")
+				+"/img/member/picture/";
+		System.out.println(path);
+		
+		String filename = null;
+		
+		MultipartRequest multi = 
+				new MultipartRequest(request, path, 10*1024*1024, "UTF-8");
+		
+		filename = multi.getFilesystemName("picture");
+		
+		System.out.println(filename);
+		request.setAttribute("filename", filename);
+		
+		return "/single/picturePro.jsp";
+	} // end of picturePro()
 }
