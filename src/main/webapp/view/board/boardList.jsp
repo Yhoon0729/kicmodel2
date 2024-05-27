@@ -1,59 +1,65 @@
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>게시판 리스트</title>
+<title>Insert title here</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-<script
-	src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
 	<div class="container">
-		<h2 class="text-center">${boardName}[${count}]</h2>
-		<a class="btn btn-primary float-right m-2" 
-		href="../board/boardForm?boardid=${boardid}">게시판 입력</a>
-	
+		<h4 class="text-center">${boardName }[${count}](bid:${boardid},
+			pnum:${pageNum})</h4>
+		<a class="btn btn-primary float-right m-2"
+			href="${pageContext.request.contextPath}/board/boardForm?boardid=${boardid}">게시판
+			입력</a>
+
 		<table class="table">
 			<thead>
 				<tr>
-					<th>게시글 번호</th>
-					<th>작성자</th>
+					<th>ser</th>
+					<th>이름</th>
 					<th>제목</th>
 					<th>이미지</th>
-					<th>내용</th>
-					<th>작성 시간</th>
+					<th>날자</th>
 					<th>조회</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:set var="count" value="${count}" />
-				<c:forEach var="mem" items="${li}">
+				<c:set var="boardNum" value="${boardNum}" />
+				<c:forEach var="m" items="${li}">
 					<tr>
-						<td>${count}</td>
-						<c:set var="count" value="${count-1}" />
-						<td>${mem.name}</td>
-						<td><a href="../board/boardInfo?num=${mem.num}">${mem.subject}</a></td>
-						<td>${mem.file1}</td>
-						<td>${mem.content}</td>
-						<td><fmt:formatDate value="${mem.regdate}" pattern="yyyy-MM-dd HH:mm"/> </td>
-						<td>${mem.readcnt}</td>
+						<td>${boardNum}</td>
+						<c:set var="boardNum" value="${boardNum-1}" />
+						<td>${m.name}</td>
+						<td><a
+							href="${pageContext.request.contextPath}/board/boardInfo?num=${m.num}">${m.subject}</a></td>
+						<td>${m.file1}</td>
+						<td>${m.regdate}</td>
+						<td>${m.readcnt}</td>
 					</tr>
 				</c:forEach>
-				</tbody>
+			</tbody>
 		</table>
+		<ul class="pagination" style="justify-content: center">
+			<li class="page-item  <c:if test="${start<=bottomLine}">disabled</c:if>"><a class="page-link"
+				href="${pageContext.request.contextPath}/board/boardList?boardid=${boardid}&pageNum=${start-bottomLine}">Previous
+			</a></li>
+
+			<c:forEach var="p" begin="${start}" end="${end}">
+				<li class="page-item"><a class="page-link"
+					href="${pageContext.request.contextPath}/board/boardList?boardid=${boardid}&pageNum=${p}">${p}</a>
+				</li>
+			</c:forEach>
+
+			<li class="page-item <c:if test="${end>=maxPage}">disabled</c:if>"><a class="page-link"
+				href="${pageContext.request.contextPath}/board/boardList?pageNum=${start+bottomLine}">Next
+			</a></li>
+		</ul>
+
 	</div>
 </body>
 </html>

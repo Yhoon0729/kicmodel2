@@ -11,29 +11,29 @@
 <body>
 	<%
 	request.setCharacterEncoding("utf-8");
-	String id = (String)session.getAttribute("id");
-	String pass = request.getParameter("pass");
-	String modPass = request.getParameter("modPass");
-	
-	KicMemberDAO dao = new KicMemberDAO();
-	KicMember memdb = dao.getMember(id);
-	
-	String msg = "";
-	String url = "memberPassForm.jsp";
-	
-	if (memdb != null) {
-		if (memdb.getPass().equals(pass)) {
-			msg = "수정 완료";
-			session.invalidate();
-			dao.modifyPass(id, modPass); 	
-			url = "login.jsp";
+		String id = (String)session.getAttribute("id");
+		String pass = request.getParameter("pass");
+		String modPass = request.getParameter("modPass");
+		
+		myMemberDAO dao = new myMemberDAO();
+		KicMember memdb = dao.getMember(id);
+		
+		String msg = "";
+		String url = "memberPassForm.jsp";
+		
+		if (memdb != null) {
+			if (memdb.getPass().equals(pass)) {
+		msg = "수정 완료";
+		session.invalidate();
+		dao.modifyPass(id, modPass); 	
+		url = "login.jsp";
+			} else {
+		msg = "비밀번호가 틀렸습니다.";
+		url = "memberPassForm.jsp";
+			} // end of if (memdb.getPass().equals(pass))
 		} else {
-			msg = "비밀번호가 틀렸습니다.";
-			url = "memberPassForm.jsp";
-		} // end of if (memdb.getPass().equals(pass))
-	} else {
-		msg = "수정할 수 없습니다.";
-	} // end of if (memdb != null)
+			msg = "수정할 수 없습니다.";
+		} // end of if (memdb != null)
 	%>
 	
 	<script>

@@ -86,9 +86,9 @@ public class MemberController extends MskimRequestMapping{
 		KicMember mem = dao.getMember(id);
 		
 		request.setAttribute("mem", mem);
-		request.setAttribute("nav", "joininfo");
+		request.setAttribute("nav", "joinInfo");
 		return "/view/member/joinInfo.jsp";
-	} // end of join()
+	} // end of joinInfo()
 	
 	@RequestMapping("memberUpdateForm")
 	public String memberUpdateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

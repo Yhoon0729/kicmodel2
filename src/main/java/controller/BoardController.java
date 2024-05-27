@@ -19,207 +19,222 @@ import model.KicBoard;
 import model.KicMember;
 
 @WebServlet("/board/*")
-public class BoardController extends MskimRequestMapping{
-	
+public class BoardController extends MskimRequestMapping {
+
 	HttpSession session;
-	
+
 	@Override
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void service(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		session = request.getSession();
 		super.service(request, response);
 	}
-	
+
 	@RequestMapping("index")
 	public String index(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		return "/view/index.jsp";
-	} // end of index()
-	
+	}
+
 	@RequestMapping("boardForm")
-	public String boardForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	public String boardForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		return "/view/board/boardForm.jsp";
-	} // end of boardForm()
-	
+	}
+
+	@RequestMapping("boardInfo")
+	public String boardInfo(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// http://localhost:8080/kicmodel2/board/boardInfo?num=10
+
+		int num = Integer.parseInt(request.getParameter("num"));
+		System.out.println(num);
+		KicBoardDAO dao = new KicBoardDAO();
+		int count = dao.addReadCount(num);
+		KicBoard board = dao.getBoard(num);
+
+		request.setAttribute("board", board);
+		return "/view/board/boardInfo.jsp";
+	}
+
+	@RequestMapping("boardUpdateForm")
+	public String boardUpdateForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// http://localhost:8080/kicmodel2/board/boardInfo?num=10
+		int num = Integer.parseInt(request.getParameter("num"));
+		System.out.println(num);
+		KicBoardDAO dao = new KicBoardDAO();
+		KicBoard board = dao.getBoard(num);
+
+		request.setAttribute("board", board);
+		return "/view/board/boardUpdateForm.jsp";
+	}
+
+	@RequestMapping("boardUpdatePro")
+	public String boardUpdatePro(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// http://localhost:8080/kicmodel2/board/boardInfo?num=10
+		String path = request.getServletContext().getRealPath("/") + "img/board/";
+		MultipartRequest multi = new MultipartRequest(request, path, 10 * 1024 * 1024, "UTF-8");
+		int num = Integer.parseInt(multi.getParameter("num"));
+		String pass = multi.getParameter("pass");
+		System.out.println(num);
+		KicBoardDAO dao = new KicBoardDAO();
+		KicBoard board = new KicBoard();
+		KicBoard boarddb = dao.getBoard(num);
+		board.setNum(num);
+		board.setContent(multi.getParameter("content"));
+		board.setSubject(multi.getParameter("subject"));
+		board.setName(multi.getParameter("name"));
+		if (multi.getFilesystemName("file1") == null)
+			board.setFile1(multi.getParameter("originfile"));
+		else
+			board.setFile1(multi.getFilesystemName("file1"));
+		String msg = "수정 되지 않았습니다";
+		String url = "boardUpdateForm?num=" + num;
+		System.out.println(boarddb);
+		if (boarddb != null) {
+			if (pass.equals(boarddb.getPass())) {
+				int count = dao.boardUpdate(board);
+				if (count == 1) {
+					msg = "수정 되었습니다";
+					url = "boardInfo?num=" + num;
+				}
+			} else {
+				msg = "비밀번호 확인 하세요";
+			}
+		} else {
+			msg = "게시물이 없습니다";
+		}
+		request.setAttribute("msg", msg);
+		request.setAttribute("url", url);
+		return "/view/alert.jsp";
+	}
+
 	@RequestMapping("boardPro")
-	public String boardPro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String path = request.getServletContext().getRealPath("/")+"img/board/";
-		
-		MultipartRequest multi = new MultipartRequest(request, path, 10*1024*1024, "UTF-8");
-		
-		String boardid = (String) session.getAttribute("boardid");
+	public String boardPro(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String path = request.getServletContext().getRealPath("/") + "img/board/";
+
+		MultipartRequest multi = new MultipartRequest(request, path, 10 * 1024 * 1024, "UTF-8");
+		String boardid = (String) session.getAttribute("boardid");// 1
 		KicBoard kicboard = new KicBoard();
 		kicboard.setName(multi.getParameter("name"));
 		kicboard.setPass(multi.getParameter("pass"));
 		kicboard.setSubject(multi.getParameter("subject"));
 		kicboard.setContent(multi.getParameter("content"));
 		kicboard.setFile1(multi.getFilesystemName("file1"));
-		kicboard.setBoardid(boardid);
-		
+		kicboard.setBoardid(boardid); // 2
+		System.out.println(kicboard);
 		KicBoardDAO dao = new KicBoardDAO();
 		int num = dao.insertBoard(kicboard);
-		
 		String msg = "게시물 등록 성공";
-		String url = "boardList?boardid="+boardid;
-		
-		if(num==0) {
+		String url = "boardList?boardid=" + boardid;
+		if (num == 0) {
 			msg = "게시물 등록 실패";
 		}
-		
 		request.setAttribute("msg", msg);
 		request.setAttribute("url", url);
-		
 		return "/view/alert.jsp";
-	} // end of boardPro()
-	
+	}
+
 	@RequestMapping("boardList")
 	public String boardList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		KicBoardDAO dao = new KicBoardDAO();
 		String boardid = request.getParameter("boardid");
 		session.setAttribute("boardid", boardid);
-		String boardName="";
-		switch(boardid) {
-			case "1" : boardName="공지사항";
+		if(session.getAttribute("boardid")==null) {
+			boardid="1";
+		}
+		
+		String pageNum = request.getParameter("pageNum");
+		session.setAttribute("pageNum", pageNum);
+		if(session.getAttribute("pageNum")==null) {
+			pageNum="1";
+		}
+		
+		String boardName = "";
+		switch (boardid) {
+		case "1":
+			boardName = "공지사항";
 			break;
-			case "2" : boardName="자유게시판";
+		case "2":
+			boardName = "자유게시판";
 			break;
-			case "3" : boardName="Q&A";
+		case "3":
+			boardName = "QnA";
 			break;
-			default : boardName="";
+		default:
+			boardName = "공지사항";
 		}
 		
 		int count = dao.boardCount(boardid);
+		int limit = 3;
+		int pageInt = Integer.parseInt(pageNum); // 페이지 목록 번호
+		int boardNum = count - ((pageInt-1)*limit); // 각 페이지의 첫번째 게시글
 		
-		List<KicBoard> li = dao.boardList(boardid);
+		int bottomLine = 3; // 하단 페이지 목록 갯수
+		int start = (pageInt - 1) / bottomLine * bottomLine + 1; // 하단 페이지 목록에서 start 페이지 번호
+		int end = start + limit - 1; // 하단 페이지 목록 마지막 페이지 번호
+		int maxPage = (int)Math.ceil((double)count/(double)limit); // 페이지 목록 갯수
+		if(end>maxPage) {
+			end = maxPage;
+		}
+		
+		List<KicBoard> li = dao.boardList(boardid, pageInt, limit);
+		
+		request.setAttribute("bottomLine", bottomLine);
+		request.setAttribute("start", start);
+		request.setAttribute("end", end);
+		request.setAttribute("maxPage", maxPage);
+		request.setAttribute("pageInt", pageInt);
+		request.setAttribute("boardNum", boardNum);
 		
 		request.setAttribute("boardName", boardName);
 		request.setAttribute("li", li);
 		request.setAttribute("boardid", boardid);
 		request.setAttribute("nav", boardid);
 		request.setAttribute("count", count);
+		
+
 		return "/view/board/boardList.jsp";
-	} // end of boardList()
-	
-	@RequestMapping("boardInfo")
-	public String boardInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int num = Integer.parseInt(request.getParameter("num"));
-		
-		System.out.println(num);
-		KicBoardDAO dao = new KicBoardDAO();
-		int count = dao.addReadCount(num);
-		KicBoard board = dao.getBoard(num);
-		
-		request.setAttribute("board", board);
-		return "/view/board/boardInfo.jsp";
-	} // end of boardInfo()
-	
-	@RequestMapping("boardUpdateForm")
-	public String boardUpdateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int num = Integer.parseInt(request.getParameter("num"));
-		KicBoardDAO dao = new KicBoardDAO();
-		KicBoard board = dao.getBoard(num);
-		
-		request.setAttribute("board", board);
-		return "/view/board/boardUpdateForm.jsp";
-	} // end of boardUpdateForm()
-	
-	@RequestMapping("boardUpdatePro")
-	public String boardUpdatePro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String path = request.getServletContext().getRealPath("/")+"img/board/";
-		
-		MultipartRequest multi = new MultipartRequest(request, path, 10*1024*1024, "UTF-8");
+	}
 
-		int num = Integer.parseInt(multi.getParameter("num"));
-		String pass = multi.getParameter("pass");
-		
-		KicBoard board = new KicBoard(); // DTO bean
-		board.setName(multi.getParameter("name"));
-		board.setSubject(multi.getParameter("subject"));
-		board.setContent(multi.getParameter("content"));
-		board.setNum(num);
-		
-		if(multi.getFilesystemName("file1")==null) {
-			board.setFile1(multi.getParameter("originfile"));
-		} else {
-			board.setFile1(multi.getFilesystemName("file1"));
-		}
-		
-		KicBoardDAO dao = new KicBoardDAO();
-		KicBoard boarddb = dao.getBoard(num);
-		
-		String msg = "";
-		String url = "boardUpdateForm?num="+num;
-		
-		if (boarddb != null) {
-			if (boarddb.getPass().equals(pass)) {
-				msg = "수정 완료";
-				dao.updateBoard(board);
-				url = "boardInfo?num="+num;
-			} else {
-				msg = "비밀번호가 틀렸습니다.";
-				url = "boardUpdateForm?num="+num;
-			} // end of if (boarddb.getPass().equals(pass))
-		} else {
-			msg = "수정할 수 없습니다.";
-		} // end of if (boarddb != null)
-		
-		request.setAttribute("msg", msg);
-		request.setAttribute("url", url);
-		
-		return "/view/alert.jsp";
-	} // end of boardUpdatePro()
-	
 	@RequestMapping("boardDeleteForm")
-	public String boardDeleteForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-		KicBoardDAO dao = new KicBoardDAO();
-		KicBoard board = new KicBoard();
-		
-		
+	public String boardDeleteForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setAttribute("num", request.getParameter("num"));
-		request.setAttribute("board", board);
 		return "/view/board/boardDeleteForm.jsp";
-	} // end of boardDeleteForm()
-	
-	@RequestMapping("boardDeletePro")
-	public String boardDeletePro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	}
 
-		request.setCharacterEncoding("utf-8");
-		
+	@RequestMapping("boardDeletePro")
+	public String boardDeletePro(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		int num = Integer.parseInt(request.getParameter("num"));
 		String pass = request.getParameter("pass");
-		System.out.println(num + ","+pass);
-		String boardid = (String) session.getAttribute("boardid");
-		
+		String boardid = (String) session.getAttribute("boardid"); // 1
 		KicBoardDAO dao = new KicBoardDAO();
 		KicBoard boarddb = dao.getBoard(num);
-		System.out.println("===================="+boarddb);
-		
-		String msg = "";
-		String url = "boardDeleteForm?num="+num;
-		
+		String msg = "삭제 되지 않았습니다";
+		String url = "boardDeleteForm?num=" + num;
 		if (boarddb != null) {
-			System.out.println("ok");
 			if (pass.equals(boarddb.getPass())) {
-				
-				int count = dao.deleteBoard(num);
-				if(count==1) {
-					msg = "게시물 삭제 완료";
-					url="boardList?boardid="+boardid;
-				} 
+				int count = dao.boardDelete(num);
+				if (count == 1) {
+					msg = "삭제 되었습니다";
+					url = "boardList?boardid=" + boardid;// 2
+				}
 			} else {
-				msg = "비밀번호 확인하시오";
-			} // end of if (pass.equals(boarddb.getPass()))
+				msg = "비밀번호 확인 하세요";
+			}
 		} else {
-			msg = "게시물이 없습니다.";
-		} // end of if (boarddb != null)
-
-		
+			msg = "게시물이 없습니다";
+		}
 		request.setAttribute("msg", msg);
 		request.setAttribute("url", url);
-		
 		return "/view/alert.jsp";
-	} // end of boardDeletePro()
-	
+	}
+
 }

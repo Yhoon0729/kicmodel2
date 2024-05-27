@@ -26,3 +26,7 @@ boardid varchar(1)
 );
 
 create sequence kicboardseq;
+
+select *
+from (select rownum rn, a.* from kicboard a where boardid='1' order by num desc)
+where rn between 4 and 6;

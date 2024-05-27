@@ -12,7 +12,6 @@ public class KicBoard {
 	private Date regdate;
 	private int readcnt;
 	private String boardid;
-	
 	public int getNum() {
 		return num;
 	}
@@ -67,11 +66,12 @@ public class KicBoard {
 	public void setBoardid(String boardid) {
 		this.boardid = boardid;
 	}
-	
 	@Override
 	public String toString() {
 		return "KicBoard [num=" + num + ", name=" + name + ", pass=" + pass + ", subject=" + subject + ", content="
 				+ content + ", file1=" + file1 + ", regdate=" + regdate + ", readcnt=" + readcnt + ", boardid="
 				+ boardid + "]";
 	}
+	
+
 }

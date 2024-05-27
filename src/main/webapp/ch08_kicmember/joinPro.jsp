@@ -15,34 +15,34 @@
 <body>
 	<%
 	request.setCharacterEncoding("utf-8");
-	String id = request.getParameter("id");
-	String pass = request.getParameter("pass");
-	String name = request.getParameter("name");
-	int gender = Integer.parseInt(request.getParameter("gender"));
-	String tel = request.getParameter("tel");
-	String email = request.getParameter("email");
-	
-	KicMemberDAO dao = new KicMemberDAO();
-	KicMember kic = new KicMember(); // DTO bean
-	kic.setId(id);
-	kic.setPass(pass);
-	kic.setName(name);
-	kic.setGender(gender);
-	kic.setTel(tel);
-	kic.setEmail(email);
-	
-	int num = dao.insertMember(kic);
-	
-	String msg = "";
-	String url = "";
-	
-	if(num > 0) {
-		msg = name + "님의 회원가입이 완료되었습니다.";
-		url = "login.jsp";
-	} else {
-		msg = "회원가입이 실패 하였습니다.";
-		url = "join.jsp";
-	}
+		String id = request.getParameter("id");
+		String pass = request.getParameter("pass");
+		String name = request.getParameter("name");
+		int gender = Integer.parseInt(request.getParameter("gender"));
+		String tel = request.getParameter("tel");
+		String email = request.getParameter("email");
+		
+		myMemberDAO dao = new myMemberDAO();
+		KicMember kic = new KicMember(); // DTO bean
+		kic.setId(id);
+		kic.setPass(pass);
+		kic.setName(name);
+		kic.setGender(gender);
+		kic.setTel(tel);
+		kic.setEmail(email);
+		
+		int num = dao.insertMember(kic);
+		
+		String msg = "";
+		String url = "";
+		
+		if(num > 0) {
+			msg = name + "님의 회원가입이 완료되었습니다.";
+			url = "login.jsp";
+		} else {
+			msg = "회원가입이 실패 하였습니다.";
+			url = "join.jsp";
+		}
 	%>
 
 	<script>

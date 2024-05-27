@@ -39,8 +39,10 @@ body {
 </style>
 </head>
 <%
+p
+
 String id = (String) session.getAttribute("id");
-KicMemberDAO dao = new KicMemberDAO();
+myMemberDAO dao = new myMemberDAO();
 KicMember mem = dao.getMember(id);
 %>
 <body>

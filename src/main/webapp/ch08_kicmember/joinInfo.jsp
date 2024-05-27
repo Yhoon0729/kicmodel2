@@ -11,8 +11,8 @@
 <body>
 	<%
 	String id = (String) session.getAttribute("id");
-	KicMemberDAO dao = new KicMemberDAO();
-	KicMember mem = dao.getMember(id);
+		myMemberDAO dao = new myMemberDAO();
+		KicMember mem = dao.getMember(id);
 	%>
 
 	<div class="container">

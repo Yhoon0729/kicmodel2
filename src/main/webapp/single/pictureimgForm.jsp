@@ -8,11 +8,11 @@
 <title>사진</title>
 </head>
 <body>
-   <div class="container">
+	<div class="container">
   <form class="form-inline" action="${pageContext.request.contextPath}/member/picturePro"   
-  enctype="multipart/form-data" method="post">
-     
-     <input type="file" class="form-control col-md-3 mb-3"  name="picture">
+  enctype="multipart/form-data"   method="post">
+  	
+	  <input type="file" class="form-control col-md-3 mb-3"  name="picture">
      <button type="submit" class="btn btn-primary col-md-3 mb-3">사진등록</button>
    
   </form>
