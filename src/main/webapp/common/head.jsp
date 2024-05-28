@@ -17,8 +17,32 @@
 
 <style>
 .nav {
-	color: #142745;
+	color: #000;
+	background-color: #f8f9fa;
 	font-weight: 900;
+}
+
+/* 가운데 정렬을 위한 스타일 */
+.navbar-nav {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+
+/* 로고 이미지 크기 조절 */
+.navbar-brand img {
+	width: 50%;
+}
+
+/* 목록 스타일 */
+.nav-item a.nav-link {
+	color: #000;
+	background-color: #f8f9fa;
+}
+
+.nav-item a.nav-link:hover {
+	color: #f8f9fa;
+	background-color: #000;
 }
 </style>
 </head>
@@ -27,20 +51,25 @@
 		<ul class="navbar-nav">
 			<a class="navbar-brand "
 				href="${pageContext.request.contextPath}/member/index"> <img
-				alt="Logo" src="${pageContext.request.contextPath}/image/logo.png"
+				alt="Logo" src="${pageContext.request.contextPath}/img/logo.png"
 				style="width: 50%">
 			</a>
 
-			<li class="nav-item"><a class="nav-link ${nav eq 'index'?'nav': ' '}" href="../member/index">홈페이지</a></li>
+			<li class="nav-item"><a
+				class="nav-link ${nav eq 'index'?'nav': ' '}" href="../member/index">홈페이지</a></li>
 
 			<c:if test="${sessionScope.id==null}">
-				<li class="nav-item"><a class="nav-link ${nav eq 'join'?'nav':' '}"
+				<li class="nav-item"><a
+					class="nav-link ${nav eq 'join'?'nav':' '}"
 					href="${pageContext.request.contextPath}/member/join">회원가입</a></li>
-				<li class="nav-item"><a class="nav-link ${nav eq 'login'?'nav': ' '}" href="../member/login">로그인</a></li>
+				<li class="nav-item"><a
+					class="nav-link ${nav eq 'login'?'nav': ' '}"
+					href="../member/login">로그인</a></li>
 			</c:if>
 
 			<c:if test="${sessionScope.id!=null}">
-				<li class="nav-item"><a class="nav-link ${nav eq 'joininfo'?'nav': ' '}"
+				<li class="nav-item"><a
+					class="nav-link ${nav eq 'joininfo'?'nav': ' '}"
 					href="${pageContext.request.contextPath}/member/joinInfo">
 						회원정보[<%=session.getAttribute("id")%>]
 				</a></li>
@@ -53,11 +82,14 @@
 					href="../member/memberList">회원리스트</a></li>
 			</c:if>
 
-			<li class="nav-item"><a class="nav-link ${boardid eq '1'?'nav': ' '}"
+			<li class="nav-item"><a
+				class="nav-link ${boardid eq '1'?'nav': ' '}"
 				href="${pageContext.request.contextPath}/board/boardList?boardid=1">공지사항</a></li>
-			<li class="nav-item"><a class="nav-link ${boardid eq '2'?'nav': ' '}"
+			<li class="nav-item"><a
+				class="nav-link ${boardid eq '2'?'nav': ' '}"
 				href="${pageContext.request.contextPath}/board/boardList?boardid=2">자유게시판</a></li>
-			<li class="nav-item"><a class="nav-link ${boardid eq '3'?'nav': ' '}"
+			<li class="nav-item"><a
+				class="nav-link ${boardid eq '3'?'nav': ' '}"
 				href="${pageContext.request.contextPath}/board/boardList?boardid=3">Q&A</a></li>
 		</ul>
 	</nav>

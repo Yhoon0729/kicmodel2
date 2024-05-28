@@ -61,66 +61,64 @@ function win_upload() {
 		<div class="input-form-backgroud row">
 			<div class="input-form col-md-12 mx-auto">
 				<h4 class="mb-3">회원가입</h4>
-				<form class="validation-form" novalidate 
-					action="joinPro" onsubmit="return chkform(this)" method="post">
-					<div class="row">
-						<div class="col-md-3 mb-3">
-							<label for="id">사진</label> 
-							<img src="" width="100px" height="120px" id="pic" name="pic">
-							<div class="btn btn-primary btn-block" onclick="win_upload()">사진업로드</div>
-						</div>
-						<div class="col-md-9 mb-3">
-							<div class="row">
-								<div class="col-md-6 mb-3">
-									<label for="id">아이디</label> 
-									<input type="text" class="form-control" id="id" placeholder="아이디" name="id" value="" required>
-									<div class="invalid-feedback">아이디을 입력해주세요.</div>
-								</div>
-								<div class="col-md-6 mb-3">
-									<label for="name">이름</label> 
-									<input type="text"class="form-control" id="name" name="name" placeholder="" value="" required>
-									<div class="invalid-feedback">이름을 입력해주세요.</div>
-								</div>
-							</div>
-						</div>
+				<form class="validation-form" novalidate action="joinPro"
+					onsubmit="return chkform(this)" method="post">
+
+					<div class="col-md-6 mb-3">
+						<label for="name">이름</label> <input type="text"
+							class="form-control" id="name" name="name" placeholder=""
+							value="" required>
+						<div class="invalid-feedback">이름을 입력해주세요.</div>
 					</div>
+
+					<div class="col-md-6 mb-3">
+						<label for="id">아이디</label> <input type="text"
+							class="form-control" id="id" placeholder="아이디" name="id" value=""
+							required>
+						<div class="invalid-feedback">아이디을 입력해주세요.</div>
+					</div>
+
+					<div class="col-md-6 mb-3">
+						<label for="pass">비밀번호</label> <input type="password"
+							class="form-control" id="pass" name="pass" placeholder=""
+							value="" required>
+						<div class="invalid-feedback">비밀번호을 입력해주세요.</div>
+					</div>
+
+
+					<div class="col-md-6 mb-3">
+						<label for="pass2">비밀번호확인</label> <input type="password"
+							class="form-control" id="pass2" name="pass2" placeholder=""
+							value="" required>
+						<div class="invalid-feedback">비밀번호확인을 입력해주세요.</div>
+					</div>
+
 
 					<div class="row">
 						<div class="col-md-6 mb-3">
-							<label for="pass">비밀번호</label> 
-							<input type="password" class="form-control" id="pass" name="pass" placeholder="" value="" required>
-							<div class="invalid-feedback">비밀번호을 입력해주세요.</div>
+							<label for="gender">남자</label> <input type="radio" id="gender"
+								name="gender" value="1" required>
 						</div>
 						<div class="col-md-6 mb-3">
-							<label for="pass2">비밀번호확인</label>
-							<input type="password" class="form-control" id="pass2" name="pass2" placeholder="" value="" required>
-							<div class="invalid-feedback">비밀번호확인을 입력해주세요.</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-md-6 mb-3">
-							<label for="gender">남자</label> 
-							<input type="radio" id="gender" name="gender" value="1" required >
-						</div>
-						<div class="col-md-6 mb-3">
-							<label for="gender">여자</label> 
-							<input type="radio" id="gender" name="gender" placeholder="" value="2"  required>
+							<label for="gender">여자</label> <input type="radio" id="gender"
+								name="gender" placeholder="" value="2" required>
 						</div>
 					</div>
 
 					<div class="mb-3">
-						<label for="email">이메일</label> 
-						<input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+						<label for="email">이메일</label> <input type="email"
+							class="form-control" id="email" name="email"
+							placeholder="you@example.com" required>
 						<div class="invalid-feedback">이메일을 입력해주세요.</div>
 					</div>
-					
+
 					<div class="mb-3">
-						<label for="tel">전화번호</label> 
-						<input type="text" class="form-control" id="tel" name="tel" placeholder="전화번호" required>
+						<label for="tel">전화번호</label> <input type="text"
+							class="form-control" id="tel" name="tel" placeholder="전화번호"
+							required>
 						<div class="invalid-feedback">전화번호를 입력해주세요.</div>
 					</div>
-					
+
 					<button class="btn btn-primary btn-lg btn-block" type="submit">가입
 						완료</button>
 				</form>
