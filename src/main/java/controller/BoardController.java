@@ -15,6 +15,7 @@ import dao.KicBoardDAO;
 import dao.KicMemberDAO;
 import kic.mskim.MskimRequestMapping;
 import kic.mskim.RequestMapping;
+import model.Comment;
 import model.KicBoard;
 import model.KicMember;
 
@@ -44,19 +45,39 @@ public class BoardController extends MskimRequestMapping {
 	}
 
 	@RequestMapping("boardInfo")
-	public String boardInfo(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// http://localhost:8080/kicmodel2/board/boardInfo?num=10
+	public String boardInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		int num = Integer.parseInt(request.getParameter("num"));
 		System.out.println(num);
 		KicBoardDAO dao = new KicBoardDAO();
-		int count = dao.addReadCount(num);
+		dao.addReadCount(num); // readcnt++
+		int count = dao.getCommentCount(num);
 		KicBoard board = dao.getBoard(num);
 
+		List<Comment> li = dao.commentList(num);
+		
 		request.setAttribute("board", board);
+		request.setAttribute("li", li);
+		request.setAttribute("count", count);
 		return "/view/board/boardInfo.jsp";
 	}
+	
+	@RequestMapping("boardCommentPro")
+	public String boardCommentPro(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
+		String comment = request.getParameter("comment");
+		int boardnum = Integer.parseInt(request.getParameter("boardnum"));
+		request.setAttribute("comment", comment);
+		request.setAttribute("boardnum", boardnum);
+		
+		KicBoardDAO dao = new KicBoardDAO();
+		dao.insertComment(comment, boardnum);
+		int count = dao.getCommentCount(boardnum);
+		
+		request.setAttribute("comment", comment);
+		request.setAttribute("count", count);
+		
+		return "/single/boardCommentPro.jsp";
+	} // end of boardCommentPro
 
 	@RequestMapping("boardUpdateForm")
 	public String boardUpdateForm(HttpServletRequest request, HttpServletResponse response)
@@ -170,6 +191,7 @@ public class BoardController extends MskimRequestMapping {
 			boardName = "공지사항";
 		}
 		
+		session.setAttribute("boardName", boardName);
 		int count = dao.boardCount(boardid);
 		int limit = 3;
 		int pageInt = Integer.parseInt(pageNum); // 페이지 목록 번호
@@ -200,7 +222,7 @@ public class BoardController extends MskimRequestMapping {
 		
 
 		return "/view/board/boardList.jsp";
-	}
+	} // end of boardList
 
 	@RequestMapping("boardDeleteForm")
 	public String boardDeleteForm(HttpServletRequest request, HttpServletResponse response)

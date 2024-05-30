@@ -79,17 +79,17 @@
 
 			<c:if test="${sessionScope.id eq 'admin'}">
 				<li class="nav-item"><a class="nav-link"
-					href="../member/memberList">회원리스트</a></li>
+					href="${pageContext.request.contextPath}/member/memberList">회원리스트</a></li>
 			</c:if>
 
 			<li class="nav-item"><a
-				class="nav-link ${boardid eq '1'?'nav': ' '}"
+				class="nav-link ${nav eq '1'?'nav': ' '}"
 				href="${pageContext.request.contextPath}/board/boardList?boardid=1">공지사항</a></li>
 			<li class="nav-item"><a
-				class="nav-link ${boardid eq '2'?'nav': ' '}"
+				class="nav-link ${nav eq '2'?'nav': ' '}"
 				href="${pageContext.request.contextPath}/board/boardList?boardid=2">자유게시판</a></li>
 			<li class="nav-item"><a
-				class="nav-link ${boardid eq '3'?'nav': ' '}"
+				class="nav-link ${nav eq '3'?'nav': ' '}"
 				href="${pageContext.request.contextPath}/board/boardList?boardid=3">Q&A</a></li>
 		</ul>
 	</nav>

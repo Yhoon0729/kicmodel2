@@ -27,6 +27,12 @@ boardid varchar(1)
 
 create sequence kicboardseq;
 
-select *
-from (select rownum rn, a.* from kicboard a where boardid='1' order by num desc)
-where rn between 4 and 6;
+-- 덧글창
+create table boardComment (
+ser int primary key,
+num int, -- board num
+content varchar2(2000),
+regdate date
+);
+
+create sequence boardcomseq;

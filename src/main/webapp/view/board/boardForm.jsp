@@ -52,7 +52,7 @@ function chkpass(f) {
 	<div class="container">
 		<div class="input-form-backgroud row">
 			<div class="input-form col-md-12 mx-auto">
-				<h4 class="mb-3">게시판등록</h4>
+				<h4 class="mb-3">${boardName}게시판등록</h4>
 				<form class="validation-form" novalidate   enctype="multipart/form-data"
 				    action="boardPro"   method="post"    onsubmit="return chkpass(this)">
 					<div class="row">

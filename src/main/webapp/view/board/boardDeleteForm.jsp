@@ -42,7 +42,7 @@ body {
 	<div class="container">
 		<div class="input-form-backgroud row">
 			<div class="input-form col-md-12 mx-auto">
-				<h4 class="mb-3  center">게시물 삭제</h4>
+				<h4 class="mb-3  center">${boardName}게시물 삭제</h4>
 				<form class="validation-form" novalidate      
 				action="boardDeletePro"     method="post">
 				<input type="hidden"  name="num"    value="${num }"/>
