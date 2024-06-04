@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import com.oreilly.servlet.MultipartRequest;
 
-import dao.KicMemberDAO;
+import dao.KicMemberMybatis;
 import kic.mskim.MskimRequestMapping;
 import kic.mskim.RequestMapping;
 import model.KicMember;
@@ -20,6 +20,8 @@ import model.KicMember;
 public class MemberController extends MskimRequestMapping {
 	HttpSession session;
 
+	KicMemberMybatis mybatisdao = new KicMemberMybatis();
+	
 	private boolean isLogin(HttpServletRequest request) {
 		return session.getAttribute("id") != null;
 	}
@@ -57,7 +59,7 @@ public class MemberController extends MskimRequestMapping {
 		String email = request.getParameter("email");
 		String picture = request.getParameter("picture");
 
-		KicMemberDAO dao = new KicMemberDAO();
+		// KicMemberDAO dao = new KicMemberDAO();
 		KicMember kic = new KicMember(); // DTO bean
 		kic.setId(id);
 		kic.setPass(pass);
@@ -67,7 +69,7 @@ public class MemberController extends MskimRequestMapping {
 		kic.setEmail(email);
 		kic.setPicture(picture);
 
-		int num = dao.insertMember(kic);
+		int num = mybatisdao.insertMember(kic);
 
 		String msg = "";
 		String url = "join";
@@ -89,8 +91,8 @@ public class MemberController extends MskimRequestMapping {
 	public String joinInfo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String id = (String) session.getAttribute("id");
-		KicMemberDAO dao = new KicMemberDAO();
-		KicMember mem = dao.getMember(id);
+		// KicMemberDAO dao = new KicMemberDAO();
+		KicMember mem = mybatisdao.getMember(id);
 
 		request.setAttribute("mem", mem);
 		request.setAttribute("nav", "joinInfo");
@@ -102,8 +104,7 @@ public class MemberController extends MskimRequestMapping {
 			throws ServletException, IOException {
 
 		String id = (String) session.getAttribute("id");
-		KicMemberDAO dao = new KicMemberDAO();
-		KicMember mem = dao.getMember(id);
+		KicMember mem = mybatisdao.getMember(id);
 		request.setAttribute("mem", mem);
 
 		return "/view/member/memberUpdateForm.jsp";
@@ -123,8 +124,7 @@ public class MemberController extends MskimRequestMapping {
 		String email = request.getParameter("email");
 		String picture = request.getParameter("picture");
 
-		KicMemberDAO dao = new KicMemberDAO();
-		KicMember memdb = dao.getMember(id);
+		KicMember memdb = mybatisdao.getMember(id);
 
 		KicMember kic = new KicMember(); // DTO bean
 		kic.setId(id);
@@ -141,7 +141,7 @@ public class MemberController extends MskimRequestMapping {
 		if (memdb != null) {
 			if (memdb.getPass().equals(pass)) {
 				msg = "수정 완료";
-				dao.updateMember(kic);
+				mybatisdao.updateMember(kic);
 				url = "joinInfo";
 			} else {
 				msg = "비밀번호가 틀렸습니다.";
@@ -172,8 +172,7 @@ public class MemberController extends MskimRequestMapping {
 		String id = (String) session.getAttribute("id");
 		String pass = request.getParameter("pass");
 
-		KicMemberDAO dao = new KicMemberDAO();
-		KicMember memdb = dao.getMember(id);
+		KicMember memdb = mybatisdao.getMember(id);
 
 		String msg = "";
 		String url = "memberDeleteForm";
@@ -182,7 +181,7 @@ public class MemberController extends MskimRequestMapping {
 			if (memdb.getPass().equals(pass)) {
 				msg = "탈퇴 완료";
 				session.invalidate();
-				dao.deleteMember(id);
+				mybatisdao.deleteMember(id);
 				url = "index";
 			} else {
 				msg = "비밀번호가 틀렸습니다.";
@@ -213,8 +212,7 @@ public class MemberController extends MskimRequestMapping {
 		String pass = request.getParameter("pass");
 		String modPass = request.getParameter("modPass");
 
-		KicMemberDAO dao = new KicMemberDAO();
-		KicMember memdb = dao.getMember(id);
+		KicMember memdb = mybatisdao.getMember(id);
 
 		String msg = "";
 		String url = "memberPassForm";
@@ -223,7 +221,7 @@ public class MemberController extends MskimRequestMapping {
 			if (memdb.getPass().equals(pass)) {
 				msg = "수정 완료";
 				session.invalidate();
-				dao.modifyPass(id, modPass);
+				mybatisdao.modifyPass(id, modPass);
 				url = "login";
 			} else {
 				msg = "비밀번호가 틀렸습니다.";
@@ -263,13 +261,13 @@ public class MemberController extends MskimRequestMapping {
 		String id = request.getParameter("id");
 		String pass = request.getParameter("pass");
 
-		// Connection 객체
-		KicMemberDAO dao = new KicMemberDAO();
+
+		// KicMemberDAO dao = new KicMemberDAO();
 
 		String msg = id + "님으로 로그인 하셨습니다.";
 		String url = "index";
 
-		KicMember mem = dao.getMember(id);
+		KicMember mem = mybatisdao.getMember(id);
 		if (mem != null) {
 			if (pass.equals(mem.getPass())) {
 				session.setAttribute("id", id);
@@ -290,8 +288,7 @@ public class MemberController extends MskimRequestMapping {
 	@RequestMapping("memberList")
 	public String memberList(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		KicMemberDAO dao = new KicMemberDAO();
-		List<KicMember> li = dao.memberList();
+		List<KicMember> li = mybatisdao.memberList();
 
 		request.setAttribute("li", li);
 		return "/view/member/memberList.jsp";

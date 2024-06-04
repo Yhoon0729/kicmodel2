@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false"/>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	<typeAliases>
+		<typeAlias type="model.KicMember" alias="member"/>
+		<typeAlias type="model.KicBoard" alias="board"/>
+		<typeAlias type="model.Comment" alias="comment"/>
+	</typeAliases>
+	
+	<environments default="oracle">
+		<environment id="oracle">
+			<transactionManager type="JDBC"/>
+			
+			<dataSource type="POOLED">
+				<property name="driver" value="oracle.jdbc.OracleDriver"/>
+				<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+				<property name="username" value="kic24"/>
+				<property name="password" value="1234"/>
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<mappers>
+		<!-- resource : xml -->
+		<mapper resource="mapper/Member.xml" />
+		<mapper class="mapper.MemberAnno"/>
+		<mapper class="mapper.BoardAnno"/>
+	</mappers>
+</configuration>

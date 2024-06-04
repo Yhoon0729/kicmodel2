@@ -1,5 +1,6 @@
-<%@page import="ch08.KicMember"%>
-<%@page import="ch08.KicMemberDAO"%>
+<%@page import="model.KicMember"%>
+<%@page import="dao.KicMemberDAO"%>
+
 <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="java.sql.PreparedStatement"%>
@@ -22,7 +23,7 @@
 		String tel = request.getParameter("tel");
 		String email = request.getParameter("email");
 		
-		myMemberDAO dao = new myMemberDAO();
+		KicMemberDAO dao = new KicMemberDAO();
 		KicMember kic = new KicMember(); // DTO bean
 		kic.setId(id);
 		kic.setPass(pass);

@@ -1,5 +1,6 @@
-<%@page import="ch08.KicMember"%>
-<%@page import="ch08.KicMemberDAO"%>
+
+<%@page import="model.KicMember"%>
+<%@page import="dao.KicMemberDAO"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.DriverManager"%>
@@ -19,7 +20,7 @@
 		String pass = request.getParameter("pass");
 
 		// Connection 객체
-		myMemberDAO dao = new myMemberDAO();
+		KicMemberDAO dao = new KicMemberDAO();
 		
 		String msg = id + "님으로 로그인 하셨습니다.";
 		String url = "index.jsp";

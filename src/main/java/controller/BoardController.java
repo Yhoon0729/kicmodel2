@@ -11,18 +11,17 @@ import javax.servlet.http.HttpSession;
 
 import com.oreilly.servlet.MultipartRequest;
 
-import dao.KicBoardDAO;
-import dao.KicMemberDAO;
+import dao.KicBoardMybatis;
 import kic.mskim.MskimRequestMapping;
 import kic.mskim.RequestMapping;
 import model.Comment;
 import model.KicBoard;
-import model.KicMember;
 
 @WebServlet("/board/*")
 public class BoardController extends MskimRequestMapping {
 
 	HttpSession session;
+	KicBoardMybatis mybatisdao = new KicBoardMybatis();
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
@@ -46,15 +45,15 @@ public class BoardController extends MskimRequestMapping {
 
 	@RequestMapping("boardInfo")
 	public String boardInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+	
 		int num = Integer.parseInt(request.getParameter("num"));
 		System.out.println(num);
-		KicBoardDAO dao = new KicBoardDAO();
-		dao.addReadCount(num); // readcnt++
-		int count = dao.getCommentCount(num);
-		KicBoard board = dao.getBoard(num);
-
-		List<Comment> li = dao.commentList(num);
+		
+		mybatisdao.addReadCount(num); // readcnt++
+		
+		int count = mybatisdao.getCommentCount(num);
+		KicBoard board = mybatisdao.getBoard(num);
+		List<Comment> li = mybatisdao.commentList(num);
 		
 		request.setAttribute("board", board);
 		request.setAttribute("li", li);
@@ -64,16 +63,15 @@ public class BoardController extends MskimRequestMapping {
 	
 	@RequestMapping("boardCommentPro")
 	public String boardCommentPro(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
-		String comment = request.getParameter("comment");
+		String content = request.getParameter("comment");
 		int boardnum = Integer.parseInt(request.getParameter("boardnum"));
-		request.setAttribute("comment", comment);
 		request.setAttribute("boardnum", boardnum);
+		request.setAttribute("comment", content);
 		
-		KicBoardDAO dao = new KicBoardDAO();
-		dao.insertComment(comment, boardnum);
-		int count = dao.getCommentCount(boardnum);
+		mybatisdao.insertComment(boardnum, content);
+		int count = mybatisdao.getCommentCount(boardnum);
 		
-		request.setAttribute("comment", comment);
+		request.setAttribute("comment", content);
 		request.setAttribute("count", count);
 		
 		return "/single/boardCommentPro.jsp";
@@ -85,8 +83,7 @@ public class BoardController extends MskimRequestMapping {
 		// http://localhost:8080/kicmodel2/board/boardInfo?num=10
 		int num = Integer.parseInt(request.getParameter("num"));
 		System.out.println(num);
-		KicBoardDAO dao = new KicBoardDAO();
-		KicBoard board = dao.getBoard(num);
+		KicBoard board = mybatisdao.getBoard(num);
 
 		request.setAttribute("board", board);
 		return "/view/board/boardUpdateForm.jsp";
@@ -101,9 +98,8 @@ public class BoardController extends MskimRequestMapping {
 		int num = Integer.parseInt(multi.getParameter("num"));
 		String pass = multi.getParameter("pass");
 		System.out.println(num);
-		KicBoardDAO dao = new KicBoardDAO();
 		KicBoard board = new KicBoard();
-		KicBoard boarddb = dao.getBoard(num);
+		KicBoard boarddb = mybatisdao.getBoard(num);
 		board.setNum(num);
 		board.setContent(multi.getParameter("content"));
 		board.setSubject(multi.getParameter("subject"));
@@ -117,7 +113,7 @@ public class BoardController extends MskimRequestMapping {
 		System.out.println(boarddb);
 		if (boarddb != null) {
 			if (pass.equals(boarddb.getPass())) {
-				int count = dao.boardUpdate(board);
+				int count = mybatisdao.boardUpdate(board);
 				if (count == 1) {
 					msg = "수정 되었습니다";
 					url = "boardInfo?num=" + num;
@@ -148,8 +144,7 @@ public class BoardController extends MskimRequestMapping {
 		kicboard.setFile1(multi.getFilesystemName("file1"));
 		kicboard.setBoardid(boardid); // 2
 		System.out.println(kicboard);
-		KicBoardDAO dao = new KicBoardDAO();
-		int num = dao.insertBoard(kicboard);
+		int num = mybatisdao.insertBoard(kicboard);
 		String msg = "게시물 등록 성공";
 		String url = "boardList?boardid=" + boardid;
 		if (num == 0) {
@@ -163,7 +158,6 @@ public class BoardController extends MskimRequestMapping {
 	@RequestMapping("boardList")
 	public String boardList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		KicBoardDAO dao = new KicBoardDAO();
 		String boardid = request.getParameter("boardid");
 		session.setAttribute("boardid", boardid);
 		if(session.getAttribute("boardid")==null) {
@@ -192,7 +186,7 @@ public class BoardController extends MskimRequestMapping {
 		}
 		
 		session.setAttribute("boardName", boardName);
-		int count = dao.boardCount(boardid);
+		int count = mybatisdao.boardCount(boardid);
 		int limit = 3;
 		int pageInt = Integer.parseInt(pageNum); // 페이지 목록 번호
 		int boardNum = count - ((pageInt-1)*limit); // 각 페이지의 첫번째 게시글
@@ -205,7 +199,7 @@ public class BoardController extends MskimRequestMapping {
 			end = maxPage;
 		}
 		
-		List<KicBoard> li = dao.boardList(boardid, pageInt, limit);
+		List<KicBoard> li = mybatisdao.boardList(boardid, pageInt, limit);
 		
 		request.setAttribute("bottomLine", bottomLine);
 		request.setAttribute("start", start);
@@ -237,13 +231,12 @@ public class BoardController extends MskimRequestMapping {
 		int num = Integer.parseInt(request.getParameter("num"));
 		String pass = request.getParameter("pass");
 		String boardid = (String) session.getAttribute("boardid"); // 1
-		KicBoardDAO dao = new KicBoardDAO();
-		KicBoard boarddb = dao.getBoard(num);
+		KicBoard boarddb = mybatisdao.getBoard(num);
 		String msg = "삭제 되지 않았습니다";
 		String url = "boardDeleteForm?num=" + num;
 		if (boarddb != null) {
 			if (pass.equals(boarddb.getPass())) {
-				int count = dao.boardDelete(num);
+				int count = mybatisdao.boardDelete(num);
 				if (count == 1) {
 					msg = "삭제 되었습니다";
 					url = "boardList?boardid=" + boardid;// 2

@@ -1,5 +1,6 @@
-<%@page import="ch08.KicMember"%>
-<%@page import="ch08.KicMemberDAO"%>
+
+<%@page import="model.KicMember"%>
+<%@page import="dao.KicMemberDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <html lang="ko">
@@ -39,10 +40,9 @@ body {
 </style>
 </head>
 <%
-p
 
 String id = (String) session.getAttribute("id");
-myMemberDAO dao = new myMemberDAO();
+KicMemberDAO dao = new KicMemberDAO();
 KicMember mem = dao.getMember(id);
 %>
 <body>

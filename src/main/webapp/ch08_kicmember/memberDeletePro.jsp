@@ -1,3 +1,5 @@
+<%@page import="model.KicMember"%>
+<%@page import="dao.KicMemberDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -12,7 +14,7 @@
 		String id = (String)session.getAttribute("id");
 		String pass = request.getParameter("pass");
 		
-		myMemberDAO dao = new myMemberDAO();
+		KicMemberDAO dao = new KicMemberDAO();
 		KicMember memdb = dao.getMember(id);
 		
 		String msg = "";
